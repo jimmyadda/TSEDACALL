@@ -15,6 +15,9 @@ import { MainComponent } from './components/administration-page/main/main.compon
 import { DonationFormComponent } from './components/donation-form/donation-form.component';
 import { ModifyCampaignComponent } from './components/administration-page/modify-campaign/modify-campaign.component';
 
+import { SuccessPaymentComponent } from './components/success-payment/success-payment.component';
+import { FailurePaymentComponent } from './components/failure-payment/failure-payment.component';
+
 import { AuthentificationGuard } from './shared/auth-guards/authentification.guard';
 
 
@@ -37,14 +40,6 @@ const routes: Routes = [
     component: AssociationsListComponent,
   },
   {
-    path: 'campaign/home/:id/:name',
-    component: CampaignPageComponent,
-  },
-  {
-    path: 'donation-form/:campaign_id',
-    component: DonationFormComponent,
-  },
-  {
     path: 'administration',
     component: AdministrationPageComponent, canActivate:[AuthentificationGuard],
     children: [
@@ -56,10 +51,27 @@ const routes: Routes = [
     ],
   },
   {
+    path: ':assocation/:name',
+    component: CampaignPageComponent,
+  },
+  {
+    path: 'donation/form/:campaign_id',
+    component: DonationFormComponent,
+  },
+  {
     path: 'admin-chat',
     component: AdminChatComponent, canActivate:[AuthentificationGuard],
   },
+  {
+    path: 'success',
+    component: SuccessPaymentComponent,
+  },
+  {
+    path: 'failure',
+    component: FailurePaymentComponent,
+  },
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled'})],

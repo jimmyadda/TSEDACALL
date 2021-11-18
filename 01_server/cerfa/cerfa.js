@@ -4,6 +4,10 @@ const auth = require('../middleware/auth.js');
 const moment = require("moment");
 const createHtmlCerfa = require('./createTable');
 const init = require('./createPdf');
+var path = require('path'); 
+const fs = require('fs');
+
+
 const buildPaths = require('./buildPaths');
 var nodemailer = require('nodemailer');
 
@@ -21,14 +25,19 @@ var transporter = nodemailer.createTransport({
 // Create Cerfa
 router.post('/cerfa', async(req, res) => {
     try {
-        data = req.body;
-        createHtmlCerfa(data);
-        const pdf = await init(data);
+        const data = req.body;
+        if (fs.existsSync(buildPaths.buildPathDir(data.donator.don_id))) {
+            var pdf = fs.readFileSync(buildPaths.buildPathPdf(buildPaths.folderStringCreation(data.donator.don_id)));
+        } else {
+            createHtmlCerfa(data);
+            var pdf = await init(data);
+        }
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "X-Requested-With");
         res.header('content-type', 'application/pdf');
         res.send(pdf);
     } catch (err) {
+        console.log(err)
         res.status(400).send(err)
     }
 })
@@ -38,8 +47,14 @@ router.post('/cerfa/mail', async(req, res) => {
     try {
         data = req.body.cerfa;
         email = req.body.email;
-        createHtmlCerfa(data);
-        const pdf = await init(data);
+
+        if (fs.existsSync(buildPaths.buildPathDir(data.donator.don_id))) {
+            var pdf = fs.readFileSync(buildPaths.buildPathPdf(buildPaths.folderStringCreation(data.donator.don_id)));
+        } else {
+            createHtmlCerfa(data);
+            var pdf = await init(data);
+        }
+
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "X-Requested-With");
         res.header('content-type', 'application/pdf');
@@ -51,7 +66,7 @@ router.post('/cerfa/mail', async(req, res) => {
             text: 'Bonjour, voici votre cerfa',
             attachments: [{
                 filename: 'cerfa.pdf',
-                path: buildPaths.buildPathPdf(data.campaign._id + '-' + data.donator.fname + '-' + data.donator.lname),
+                path: buildPaths.buildPathPdf(buildPaths.folderStringCreation(data.donator.don_id)),
                 contentType: 'application/pdf'
               }]
           };
@@ -63,6 +78,5 @@ router.post('/cerfa/mail', async(req, res) => {
         res.status(400).send(err)
     }
 })
-
 
 module.exports = router

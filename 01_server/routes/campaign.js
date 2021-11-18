@@ -2,7 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const auth = require('../middleware/auth.js');
 const Campaign = require('../../00_db/models/campaign');
-const Payment = require('../../00_db/models/donation');
+const Donation = require('../../00_db/models/donation');
 const User = require('../../00_db/models/user');
 const moment = require("moment");
 const uploadImage = require('../middleware/upload')
@@ -47,6 +47,7 @@ router.post('/campaign', auth, async(req, res) => {
         fs.mkdirSync(path.join(__dirname, `../campaign/${campaign._id}/media`));
         res.status(201).send({ campaign })
     } catch (err) {
+        console.log(err)
         res.status(400).send(err)
     }
 })
@@ -56,7 +57,22 @@ router.get('/campaign/:id', async(req, res) => {
     try {
         campaignId = req.params.id;
         let campaign = await Campaign.findById(campaignId)
-        let totalSum = await Payment.aggregate([{$match:{"campaignId": ObjectId(campaignId)}},{ $group: { _id: false, sum: {$sum: "$sum"}}}])
+        let totalSum = await Donation.aggregate([{$match:{"campaignId": ObjectId(campaignId)}},{ $group: { _id: false, sum: {$sum: "$sum"}}}])
+        campaign.totalSum = (totalSum.length)? totalSum[0].sum : 0
+        res.send(campaign)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send()
+    }
+})
+
+// Get exist campaign by url
+router.post('/campaign/byurl', async(req, res) => {
+    try {
+        const url = req.body.url
+        console.log(url)
+        let campaign = await Campaign.findOne({url:url})
+        let totalSum = await Donation.aggregate([{$match:{"campaignId": ObjectId(campaign._id)}},{ $group: { _id: false, sum: {$sum: "$sum"}}}])
         campaign.totalSum = (totalSum.length)? totalSum[0].sum : 0
         res.send(campaign)
     } catch (err) {
@@ -71,7 +87,7 @@ router.get('/campaigns/founder/:id', async(req, res) => {
         founder = req.params.id
         let campaigns = await Campaign.find({founder_id:founder})
         for (let campaign of campaigns){
-            let totalSum = await Payment.aggregate([{$match:{"campaignId": campaign._id}},{ $group: { _id: false, sum: {$sum: "$sum"}}}])
+            let totalSum = await Donation.aggregate([{$match:{"campaignId": campaign._id}},{ $group: { _id: false, sum: {$sum: "$sum"}}}])
             campaign.totalSum = (totalSum.length)? totalSum[0].sum : 0
         }
         res.send(campaigns)
@@ -86,7 +102,7 @@ router.get('/campaign', async(req, res) => {
     try {
         let campaigns = await Campaign.find({actif:true})
         for (let campaign of campaigns){
-            let totalSum = await Payment.aggregate([{$match:{"campaignId": campaign._id}},{ $group: { _id: false, sum: {$sum: "$sum"}}}])
+            let totalSum = await Donation.aggregate([{$match:{"campaignId": campaign._id}},{ $group: { _id: false, sum: {$sum: "$sum"}}}])
             campaign.totalSum = (totalSum.length)? totalSum[0].sum : 0
         }
         res.send(campaigns)
@@ -110,12 +126,14 @@ router.put('/campaign/:id', auth, async(req, res) => {
 // Get cover picture campaign
 router.get('/cover/:id', async(req, res) => {
     const campaign = await Campaign.findById({_id: req.params.id}, {_id:false, cover:true})
-    const imageName = campaign.cover.toString()
-    const imagePath = path.join(__dirname, `../campaign/${req.params.id}/cover`, imageName);
-    fs.exists(imagePath, exists => {
-        if (exists) res.sendFile(imagePath);
-        else res.status(400).send('Error: Image does not exists');
-    });
+    if (campaign.cover){
+        const imageName = campaign.cover.toString()
+        const imagePath = path.join(__dirname, `../campaign/${req.params.id}/cover`, imageName);
+        fs.exists(imagePath, exists => {
+            if (exists) res.sendFile(imagePath);
+            else res.status(400).send('Error: Image does not exists');
+        });
+    }
 })
 
 // Get media names
@@ -149,10 +167,10 @@ function compare( a, b ) {
 // Get vedette campaign
 router.get('/campaign/find/top', async(req, res) => {
     try {
-        let campaigns = await Campaign.find({actif:true});
+        let campaigns = await Campaign.find({actif:true, collect:false});
         for (let campaign of campaigns){
-            let totalSum = await Payment.aggregate([{$match:{"campaignId": campaign._id}},{ $group: { _id: false, sum: {$sum: "$sum"}}}])
-            campaign.totalSum = totalSum[0].sum
+            let totalSum = await Donation.aggregate([{$match:{"campaignId": campaign._id}},{ $group: { _id: false, sum: {$sum: "$sum"}}}])
+            campaign.totalSum = (totalSum.length)? totalSum[0].sum : 0
         }
         campaigns = campaigns.sort(compare);
         res.send(campaigns[0])

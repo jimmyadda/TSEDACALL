@@ -35,6 +35,7 @@ import { SharedDirectivesModule } from './shared/directive/shared-directives.mod
 import { NgxHideOnScrollModule } from 'ngx-hide-on-scroll';
 import { ToastrModule } from 'ngx-toastr';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgxStripeModule } from 'ngx-stripe';
 
 
 // Pipes 
@@ -95,7 +96,8 @@ import { ModifyCampaignComponent } from './components/administration-page/modify
 import { ModifyDetailsComponent } from './components/administration-page/modify-campaign/modify-details/modify-details.component';
 import { VideoMediaComponent } from './components/campaign-page/video-media/video-media.component';
 import { SafePipe } from './shared/pipes/safe.pipe';
-import { Ng2FlatpickrModule } from 'ng2-flatpickr';
+import { SuccessPaymentComponent } from './components/success-payment/success-payment.component';
+import { FailurePaymentComponent } from './components/failure-payment/failure-payment.component';
 
 @NgModule({
   declarations: [
@@ -147,7 +149,9 @@ import { Ng2FlatpickrModule } from 'ng2-flatpickr';
     ModifyCampaignComponent,
     ModifyDetailsComponent,
     VideoMediaComponent,
-    SafePipe
+    SafePipe,
+    SuccessPaymentComponent,
+    FailurePaymentComponent
   ],
   imports: [
     CommonModule,
@@ -176,8 +180,8 @@ import { Ng2FlatpickrModule } from 'ng2-flatpickr';
     ChartsModule,
     NgxHideOnScrollModule,
     NgbModule,
-    Ng2FlatpickrModule,
     ModalModule.forRoot(),
+    NgxStripeModule.forRoot('pk_test_51J2N0iLkAa6v5r0HY9LHJkBIA8PgSajN4WrGhkNo5lnVdqIxyST8t1P7wvC2mqmaIbeiEK1nHfIV7oleTetCpWdL00RHXrBLPs'),
     ShareButtonsModule.withConfig({
       debug: true
     }),

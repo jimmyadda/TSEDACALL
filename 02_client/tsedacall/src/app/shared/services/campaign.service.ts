@@ -11,10 +11,19 @@ import { environment } from 'src/environments/environment';
 })
 export class CampaignService {
   campaignsStore:Campaign[] = [];
+  private campaignId;
   campaignsChanged = new BehaviorSubject<Campaign[]>([]);
   readonly campaigns = this.campaignsChanged.asObservable();
 
   constructor(private http: HttpClient) { }
+
+  set campaignToGet(campaignId) {
+    this.campaignId = campaignId;
+  }
+
+  get campaignToGet() {
+    return this.campaignId;
+  }
 
   public getCampaigns(){
     return this.http.get<Campaign[]>(environment.apiUrl+ 'campaign').subscribe(
@@ -34,6 +43,10 @@ export class CampaignService {
 
   public getCampaignById(id){
     return this.http.get<Campaign>(environment.apiUrl + `campaign/${id}`)
+  }
+
+  public getCampaignByUrl(url){
+    return this.http.post<Campaign>(environment.apiUrl + `campaign/byurl`, {url:url})
   }
 
   public getCampaignMediaName(id){

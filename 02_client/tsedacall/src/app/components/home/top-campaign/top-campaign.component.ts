@@ -44,20 +44,22 @@ export class TopCampaignComponent implements OnInit, OnDestroy {
     return `Il y a ${time} heures`
   }
 
-  onClick(id, name){
+  onClick(assocation, name){
     name = name.replace(' ', '-').toLowerCase()
-    this.router.navigate([`/campaign/home/${id}/${name}`]);
+    assocation = assocation.replace(' ', '-').toLowerCase()
+    this.router.navigate([`/${assocation}/${name}`]);
   }
 
   onClickDonationForm(id){
-    this.router.navigate([`/donation-form/${id}`]);
+    console.log(id)
+    this.router.navigate([`/donation/form/${id}`]);
   }
 
 
   ngOnDestroy() {
-    if (this.interval) {
-      clearInterval(this.interval);
-    } 
+    // if (this.interval) {
+    //   clearInterval(this.interval);
+    // } 
   }
 
 }

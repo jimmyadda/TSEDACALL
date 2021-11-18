@@ -61,19 +61,137 @@
         </nav>
         
       </div>
-    </div>
-
-
-  
+    </div>  
   </section> -->
+
 
 
   <section class="navbar-section">
     <header class="header">
       <nav class="navbar fixed-top navbar-expand-md navbar-light">
-          <a href="#" class="nav-logo">LOGO</a>
-          <ul class="navbar-nav mb-2 mb-lg-0 nav-menu" style="margin: auto;">
-            <li class="nav-item cursor-pointer" routerLinkActive="menu-item-active">
+        
+        <div class="nav-logo-order">
+          <!-- LOGO -->
+          <div class="nav-logo">
+            <a href="#" class="nav-logo"><img src="../../../assets/images/levtov.jpg"></a>
+          </div>
+  
+          <div class="nav-order">
+            <!-- MENU BURGER -->
+            <div class="nav-burger-menu">
+              <div class="nav-burger" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+                <div class="hamburger" onclick="mobileMenu()">
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                  <span class="bar"></span>
+                </div>
+              </div>
+            </div>
+            <!-- LANGUES -->
+            <div class="nav-language">
+              <div class="nav-item dropdown" id="lang_id">
+                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  LANGUES
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li class="cursor-pointer" (click)="useLanguage('fr')"><a class="dropdown-item" onclick="set('Français', 'assets/image/france.png')">  <img src="assets/image/france.png" alt="">Français</a></li>
+                  <li class="cursor-pointer" (click)="useLanguage('en')"><a class="dropdown-item" onclick="set('ENGLISH', 'assets/image/united-kingdom.png')"> <img src="assets/image/united-kingdom.png" alt="">English</a></li> 
+                  <li class="cursor-pointer" (click)="useLanguage('he')"><a class="dropdown-item" onclick="set('עברית', 'assets/image/israel.png')"><img src="assets/image/israel.png" alt="">עברית</a></li> 
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+            
+        <div class="offcanvas offcanvas-start w-25" tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false">
+          <!-- <div class="offcanvas-header">
+              <h6 class="offcanvas-title d-none d-sm-block" id="offcanvas">Menu</h6>
+              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div> -->
+          <div class="offcanvas-body px-0">
+              <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
+                <li class="nav-item" routerLinkActive="menu-item-active">
+                  <a class="nav-link" scrollTo="campaign-section">
+                    <i class="fa fa-briefcase"></i> {{'navbar.Campaigns' | translate}}
+                  </a>
+                </li>
+                <li class="nav-item" routerLinkActive="menu-item-active">
+                  <a class="nav-link" scrollTo="campaign-section">
+                    <i class="fa fa-globe"></i> {{'navbar.HowItWork' | translate}}
+                  </a>
+                </li>
+                <li class="nav-item" routerLinkActive="menu-item-active">
+                  <a class="nav-link" scrollTo="campaign-section">
+                    <i class="fa fa-user"></i> {{'navbar.Search' | translate}}
+                  </a>
+                </li>
+                <!-- SI NON CONNECTE A AFFICHER !!!!! -->
+                <li class="nav-item" *ngIf="!isAuthenticated" routerLinkActive="menu-item-active">
+                  <a class="nav-link dashboard-title" routerLink="/auth/login">{{'navbar.LogIn' | translate}}</a>
+                </li>
+                <li class="nav-item" *ngIf="!isAuthenticated" routerLinkActive="menu-item-active">
+                  <a class="nav-link dashboard-title" routerLink="/auth/signup">{{'navbar.SignUp' | translate}}</a>
+                </li>
+              </ul>
+
+              <!-- SI CONNECTE A AFFICHER !!!!! -->
+              <ul *ngIf="isAuthenticated" class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-start" id="menu">
+                <li class="nav-item" (click)="onNavigationProfile()"><a class="nav-link dashboard-title">Dashboard</a></li>
+                <li class="nav-item" routerLinkActive="menu-item-active">
+                  <a class="nav-link" (click)="nav('administration/add')" [translate]="'administration.dashboard.Button1'"></a>
+                </li>
+                <li class="nav-item" routerLinkActive="menu-item-active">
+                  <a class="nav-link" (click)="nav('administration/search')" [translate]="'administration.dashboard.Button2'"></a>
+                </li>
+                <li class="nav-item" routerLinkActive="menu-item-active">
+                  <a class="nav-link" [translate]="'administration.dashboard.Button3'"></a>
+                </li>
+                <li class="nav-item" routerLinkActive="menu-item-active">
+                  <a class="nav-link" (click)="nav('administration/modif')" [translate]="'administration.dashboard.Button4'"></a>
+                </li>
+                <!-- <li class="nav-item" routerLinkActive="menu-item-active">
+                  <a class="nav-link" (click)="newCampaign()" [translate]="'administration.dashboard.Button5'"></a>
+                </li> -->
+                <li class="nav-item" routerLinkActive="menu-item-active">
+                  <a class="nav-link" (click)="nav('administration/add')" [translate]="'administration.dashboard.Button1'"></a>
+                </li>
+                <li class="nav-item" (click)="onLogout()">
+                  <a class="nav-link dashboard-deconnection"> {{'navbar.Logout' | translate}}</a>
+                </li>
+              </ul>
+          </div>
+        </div>
+
+        <!-- CONNECTION OU CONNECTE -->
+        
+        <!-- <div class="nav-log">
+          <div class="navbar-nav mb-2 mb-lg-0 nav-menu">
+            <div class="nav-item" *ngIf="!isAuthenticated" routerLinkActive="menu-item-active">
+              <a class="nav-link" routerLink="/auth/login">{{'navbar.LogIn' | translate}}</a>
+            </div>
+            <div class="nav-item" *ngIf="!isAuthenticated" routerLinkActive="menu-item-active">
+              <a class="nav-link" routerLink="/auth/signup">{{'navbar.SignUp' | translate}}</a>
+            </div>
+            
+            <div class="nav-item dropdown" *ngIf="isAuthenticated">
+              <a class="nav-link dropdown-toggle" id="navbarDropdownGeneral" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span><i class="fa fa-user-circle fa-lg"></i> {{userName}}</span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownGeneral">
+                <li class="cursor-pointer" (click)="onNavigationProfile()"><a  class="dropdown-item"><i class="fa fa-id-card"></i> Dashboard</a></li>
+                <li class="cursor-pointer" (click)="onLogout()"><a class="dropdown-item"> <i class="fa fa-sign-out" aria-hidden="true"></i> {{'navbar.Logout' | translate}}</a></li>
+              </ul>
+            </div> 
+          </div>
+        </div> -->
+
+          
+        
+
+          <!-- <ul class="navbar-nav mb-2 mb-lg-0 nav-menu"> -->
+            <!-- <li class="nav-item cursor-pointer" routerLinkActive="menu-item-active">
               <a class="nav-link active" aria-current="page" [routerLink]="'/home'"> <i class="fa fa-home"></i>{{'navbar.Home' | translate}}</a>
             </li>
             <li class="nav-item cursor-pointer" routerLinkActive="menu-item-active">
@@ -84,9 +202,27 @@
             </li>
             <li class="nav-item cursor-pointer" routerLinkActive="menu-item-active">
               <a class="nav-link" scrollTo="team-section"><i class="fa fa-user"></i> {{'navbar.Search' | translate}}</a>
+            </li> -->
+  
+            <!-- <li class="nav-item" *ngIf="!isAuthenticated" routerLinkActive="menu-item-active">
+              <a class="nav-link" routerLink="/auth/login"><i class="fa fa-sign-in" aria-hidden="true"></i>{{'navbar.LogIn' | translate}}</a>
+            </li>
+            <li class="nav-item" *ngIf="!isAuthenticated" routerLinkActive="menu-item-active">
+              <a class="nav-link" routerLink="/auth/signup"> <i class="fa fa-sign-out" aria-hidden="true"></i>{{'navbar.SignUp' | translate}}</a>
             </li>
             
-            <li class="nav-item dropdown" id="lang_id">
+            <li class="nav-item dropdown" *ngIf="isAuthenticated">
+            
+              <a class="nav-link dropdown-toggle" id="navbarDropdownGeneral" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span><i class="fa fa-user-circle fa-lg"></i> {{userName}}</span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownGeneral">
+                <li class="cursor-pointer" (click)="onNavigationProfile()"><a  class="dropdown-item"><i class="fa fa-id-card"></i> Dashboard</a></li>
+                <li class="cursor-pointer" (click)="onLogout()"><a class="dropdown-item"> <i class="fa fa-sign-out" aria-hidden="true"></i> {{'navbar.Logout' | translate}}</a></li>
+              </ul>
+            </li>  -->
+            
+            <!-- <li class="nav-item dropdown" id="lang_id">
               
               <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="assets/image/france.png" alt=""> Français
@@ -96,54 +232,39 @@
                 <li class="cursor-pointer" (click)="useLanguage('en')"><a class="dropdown-item" onclick="set('ENGLISH', 'assets/image/united-kingdom.png')"> <img src="assets/image/united-kingdom.png" alt="">ENGLISH</a></li> 
                 <li class="cursor-pointer" (click)="useLanguage('he')"><a class="dropdown-item" onclick="set('עברית', 'assets/image/israel.png')"><img src="assets/image/israel.png" alt="">עברית</a></li> 
               </ul>
+            </li> -->
+  
+            
+  
+            <!-- <li class="nav-item cursor-pointer" *ngIf="isAuthenticated" routerLinkActive="menu-item-active" (click)="onNavigationProfile()">
+              <a><i class="fa fa-id-card"></i>Dashboard</a>
             </li>
-
-              <li class="nav-item" *ngIf="!isAuthenticated" routerLinkActive="menu-item-active">
-                <a class="nav-link" routerLink="/auth/login"><i class="fa fa-sign-in" aria-hidden="true"></i>{{'navbar.LogIn' | translate}}</a>
-              </li>
-              <li class="nav-item" *ngIf="!isAuthenticated" routerLinkActive="menu-item-active">
-                <a class="nav-link" routerLink="/auth/signup"> <i class="fa fa-sign-out" aria-hidden="true"></i>{{'navbar.SignUp' | translate}}</a>
-              </li>
-              
-              <li class="nav-item dropdown" *ngIf="isAuthenticated">
-              
-                <a class="nav-link dropdown-toggle" id="navbarDropdownGeneral" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <span><i class="fa fa-user-circle fa-lg"></i> {{userName}}</span>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdownGeneral">
-                  <li class="cursor-pointer" (click)="onNavigationProfile()"><a  class="dropdown-item"><i class="fa fa-id-card"></i> Dashboard</a></li>
-                  <li class="cursor-pointer" (click)="onLogout()"><a class="dropdown-item"> <i class="fa fa-sign-out" aria-hidden="true"></i> {{'navbar.Logout' | translate}}</a></li>
-                </ul>
-              </li> 
-
-
-
-              <!-- <li class="nav-item cursor-pointer" *ngIf="isAuthenticated" routerLinkActive="menu-item-active" (click)="onNavigationProfile()">
-                <a><i class="fa fa-id-card"></i>Dashboard</a>
-              </li>
-
-              <li class="nav-item  cursor-pointer" *ngIf="isAuthenticated" routerLinkActive="menu-item-active" (click)="onLogout()">
-                <a class="nav-link"> <i class="fa fa-sign-out" aria-hidden="true"></i>{{'navbar.Logout' | translate}}</a>
-              </li> -->
-          </ul>
-          <div class="hamburgerMobile">
-            <li class="nav-item dropdown" id="lang_id">
-              
-              <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLinkMobile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="assets/image/france.png" alt=""> Français
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <li (click)="useLanguage('fr')"><a class="dropdown-item" onclick="set('Français', 'assets/image/france.png')">  <img src="assets/image/france.png" alt="">Français</a></li>
-                <li (click)="useLanguage('en')"><a class="dropdown-item" onclick="set('ENGLISH', 'assets/image/united-kingdom.png')"> <img src="assets/image/united-kingdom.png" alt="">ENGLISH</a></li> 
-                <li (click)="useLanguage('he')"><a class="dropdown-item" onclick="set('עברית', 'assets/image/israel.png')"><img src="assets/image/israel.png" alt="">עברית</a></li> 
-              </ul>
-            </li>
-          </div> 
-          <div class="hamburger" onclick="mobileMenu()">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
+  
+            <li class="nav-item  cursor-pointer" *ngIf="isAuthenticated" routerLinkActive="menu-item-active" (click)="onLogout()">
+              <a class="nav-link"> <i class="fa fa-sign-out" aria-hidden="true"></i>{{'navbar.Logout' | translate}}</a>
+            </li> -->
+          <!-- </ul> -->
+        
+        
+        
+        <!-- <div class="hamburgerMobile">
+          <li class="nav-item dropdown" id="lang_id">
+            
+            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLinkMobile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="assets/image/france.png" alt=""> Français
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li (click)="useLanguage('fr')"><a class="dropdown-item" onclick="set('Français', 'assets/image/france.png')">  <img src="assets/image/france.png" alt="">Français</a></li>
+              <li (click)="useLanguage('en')"><a class="dropdown-item" onclick="set('ENGLISH', 'assets/image/united-kingdom.png')"> <img src="assets/image/united-kingdom.png" alt="">ENGLISH</a></li> 
+              <li (click)="useLanguage('he')"><a class="dropdown-item" onclick="set('עברית', 'assets/image/israel.png')"><img src="assets/image/israel.png" alt="">עברית</a></li> 
+            </ul>
+          </li>
+        </div> 
+        <div class="hamburger" onclick="mobileMenu()">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div> -->
       </nav>
     </header>
   </section>
